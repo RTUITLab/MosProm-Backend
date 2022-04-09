@@ -58,7 +58,7 @@ class ElevatorBase(BaseModel):
 
 
 class ElevatorCreate(ElevatorBase):
-    owner_uuid: UUID
+    owner_uuid: UUID = None
 
 
 class Elevator(ElevatorBase):
@@ -67,6 +67,12 @@ class Elevator(ElevatorBase):
 
     class Config:
         orm_mode = True
+
+
+class ElevatorIndicatorData(BaseModel):
+    name: str
+    min_value: float = None
+    max_value: float = None
 # endregion
 
 

@@ -50,7 +50,6 @@ async def get_current_user(
         settings.secret_key,
         algorithms=[ALGORITHM]
     )
-    print(payload)
     username = payload.get("user")["login"]
     try:
 
@@ -58,7 +57,6 @@ async def get_current_user(
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    print(username)
     user_db = crud.get_user_by_login(db=db, login=username)
     if user_db is None:
         raise credentials_exception

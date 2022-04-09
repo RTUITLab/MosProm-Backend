@@ -48,10 +48,25 @@ async def db_session_middleware(request: Request, call_next):
 @app.on_event("startup")
 async def startup():
     with Session(engine) as db:
+        user_data = files.json_loader("app/database/init_data/user.json")
+        default_user = schemas.UserCreate(**user_data)
         try:
-            user_data = files.json_loader("app/database/init_data/user.json")
-            default_user = schemas.UserCreate(**user_data)
+
             default_user.password = password.hash(default_user.password)
             crud.create_user(db=db, new_user=default_user)
         except Exception:
+            db.rollback()
             pass
+
+        if not crud.get_elevators(db=db):
+            elevators_data = files.json_loader(
+                "app/database/init_data/elevators.json")
+            for elevator_data in elevators_data:
+                new_elevator = schemas.ElevatorCreate(**elevator_data)
+                crud.create_elevator(db=db, new_elevator=new_elevator)
+        if not crud.get_indicators(db=db):
+            indicator_names = files.json_loader(
+                "app/database/init_data/indicators.json")
+            for indicator_name in indicator_names:
+                new_indicator = schemas.IndicatorCreate(name=indicator_name)
+                crud.create_indicator(db=db, new_indicator=new_indicator)

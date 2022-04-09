@@ -1,4 +1,5 @@
 from datetime import datetime
+from pyexpat import model
 from typing import List
 from uuid import UUID
 from sqlalchemy.orm import Session
@@ -15,7 +16,7 @@ def create_user(db: Session, new_user: schemas.UserCreate):
     return
 
 
-def get_user_by_login(db: Session, login: str):
+def get_user_by_login(db: Session, login: str) -> models.User:
     return db.query(models.User).filter_by(login=login).first()
 
 
@@ -33,8 +34,18 @@ def create_indicator(db: Session, new_indicator: schemas.IndicatorCreate):
     return
 
 
-def get_indicators(db: Session):
+def get_indicators(db: Session, uuid: UUID = None):
     return db.query(models.Indicator).all()
+
+
+def get_elevator_indicators(db: Session, uuid: UUID):
+    query = db.query(
+        models.Indicator.name,
+        models.ElevatorIndicator.min_value,
+        models.ElevatorIndicator.max_value
+    ).join(models.ElevatorIndicator).\
+        filter(models.ElevatorIndicator.elevator_uuid == uuid)
+    return query.all()
 
 
 def get_indicator_by_name(db: Session, name: str):
@@ -64,10 +75,10 @@ def update_elevator_by_mac(db: Session, mac_address: str, user_uuid: UUID):
     return
 
 
-def get_elevators(db: Session, uuid: str = None):
+def get_elevators(db: Session, owner_uuid: UUID = None):
     query = db.query(models.Elevator)
-    if uuid:
-        query = query.filter_by(uuid=uuid)
+    if owner_uuid:
+        query = query.filter_by(owner_uuid=uuid)
     return query.all()
 
 

@@ -1,0 +1,38 @@
+[
+    {
+        "title": "Elevator 1",
+        "model": "ПП-0411Е",
+        "address": "г. Москва, пр-т Вернадского, 78",
+        "mac_address": "AA-5A-7B-CA-DB-CE"
+    },
+    {
+        "title": "Elevator 2",
+        "model": "ПП-0606Е",
+        "address": "г. Ижевск, ул. Пушкина, 12",
+        "mac_address": "AC-92-63-6E-DA-43"
+    },
+    {
+        "title": "Elevator 3",
+        "model": "ПП-0411Е",
+        "address": "г. Москва, пр-т Вернадского, 86",
+        "mac_address": "CD-1D-00-3F-A9-89"
+    },
+    {
+        "title": "Elevator 4",
+        "model": "ПП-1021Е",
+        "address": "г. Самара, ул. Выдуманная, 2",
+        "mac_address": "CC-00-93-AC-F0-E2"
+    },
+    {
+        "title": "Elevator 5",
+        "model": "ПП-0606Е",
+        "address": "г. Ижевск, ул. Пушкина, 2",
+        "mac_address": "DD-9C-00-78-96-17"
+    },
+    {
+        "title": "Elevator 6",
+        "model": "ПП-1021Е",
+        "address": "г. Самара, ул. Выдуманная, 1",
+        "mac_address": "BB-17-7F-E9-20-ED"
+    }
+]
