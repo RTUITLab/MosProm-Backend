@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  backend:
+    build: .
+    command: bash -c "python migrate.py && python run.py"
+    environment:
+      DEBUG: 1
+      DATABASE_URL: postgresql://postgres:TheDim0n@164.92.252.250:5432/mosprom
+    ports:
+      - 8000:8000
