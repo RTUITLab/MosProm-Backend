@@ -16,18 +16,35 @@ router = APIRouter(
 
 
 @router.get('/', summary="Read list of users",
-            response_model=List[schemas.User])
+            response_model=List[schemas.User],
+            dependencies=[Depends(auth.get_current_user)])
 async def read_users(db=Depends(get_db)):
     return crud.get_users(db=db)
 
 
-@router.post('/', status_code=201, summary="Create new user")
+@router.post('/', status_code=201, summary="Create new user",
+             dependencies=[Depends(auth.get_current_user)])
 async def create_user(new_user: schemas.UserCreate, db=Depends(get_db)):
     user_db = crud.get_user_by_login(db=db, login=new_user.login)
     if user_db:
         raise HTTPException(status_code=401, detail="User already exist")
     new_user.password = passwd.hash(new_user.password)
     _ = crud.create_user(db=db, new_user=new_user)
+    return Response(status_code=201)
+
+
+@router.post('/elevators/{mac_address}/', status_code=201,
+             summary="Add new elevator for current user")
+async def create_elevator(
+    mac_address: str,
+    current_user: schemas.User = Depends(auth.get_current_user),
+    db=Depends(get_db)
+):
+    _ = crud.update_elevator_by_mac(
+        db=db,
+        mac_address=mac_address,
+        user_uuid=current_user.uuid
+    )
     return Response(status_code=201)
 
 
@@ -48,6 +65,6 @@ async def get_user_token(
     user = schemas.User.from_orm(user_db)
     user.uuid = str(user.uuid)
     access_token = auth.create_user_access_token(
-        {"sub": user.dict()}
+        {"user": user.dict()}
     )
     return {"access_token": access_token, "token_type": "bearer"}

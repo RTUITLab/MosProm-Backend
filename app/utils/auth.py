@@ -5,7 +5,7 @@ from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
 from . import password as passwd
-from ..database import crud, schemas
+from ..database import crud
 from ..dependencies import get_settings, get_db
 
 
@@ -45,18 +45,21 @@ async def get_current_user(
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+    payload = jwt.decode(
+        token,
+        settings.secret_key,
+        algorithms=[ALGORITHM]
+    )
+    print(payload)
+    username = payload.get("user")["login"]
     try:
-        payload = jwt.decode(
-            token,
-            settings.secret_key,
-            algorithms=[ALGORITHM]
-        )
-        username: str = payload.get("sub")
+
         if username is None:
             raise credentials_exception
     except JWTError:
         raise credentials_exception
+    print(username)
     user_db = crud.get_user_by_login(db=db, login=username)
     if user_db is None:
         raise credentials_exception
-    return schemas.UserBase(login=user_db.login)
+    return user_db
