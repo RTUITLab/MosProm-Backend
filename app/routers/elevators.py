@@ -35,7 +35,7 @@ async def create_elevator_indicators(
 @router.post("/{uuid}/indicators/", status_code=201,
              summary="Create list of indicators",
              dependencies=[Depends(auth.get_current_user)])
-async def create_elevator_indicators(
+async def create_indicators(
     uuid: UUID,
     indicators: List[schemas.ElevatorIndicatorCreate],
     db=Depends(get_db)

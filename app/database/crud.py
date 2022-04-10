@@ -1,5 +1,4 @@
 from datetime import datetime
-from pyexpat import model
 from typing import List
 from uuid import UUID
 from sqlalchemy.orm import Session
@@ -78,7 +77,7 @@ def update_elevator_by_mac(db: Session, mac_address: str, user_uuid: UUID):
 def get_elevators(db: Session, owner_uuid: UUID = None):
     query = db.query(models.Elevator)
     if owner_uuid:
-        query = query.filter_by(owner_uuid=uuid)
+        query = query.filter_by(owner_uuid=owner_uuid)
     return query.all()
 
 
