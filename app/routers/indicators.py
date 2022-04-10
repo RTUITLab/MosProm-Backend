@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, HTTPException, Response
-from typing import List
 from uuid import UUID
 
 from ..database import crud, schemas
@@ -11,10 +10,9 @@ router = APIRouter(
 )
 
 
-@router.get("/", summary="Read list of indicators",
-            response_model=List[schemas.Indicator])
-async def read_indicators(db=Depends(get_db)):
-    return crud.get_indicators(db=db)
+@router.get("/", summary="Read list of indicators")
+async def read_indicators(name: str = None, db=Depends(get_db)):
+    return crud.get_indicators(db=db, name=name)
 
 
 @router.post('/', status_code=201, summary="Create new indicator")

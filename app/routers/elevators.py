@@ -21,6 +21,18 @@ async def read_elevators(
     return crud.get_elevators(db=db, owner_uuid=owner_uuid)
 
 
+@router.patch('/{uuid}/', status_code=204,
+              summary="Update elevator's data by uuid",
+              dependencies=[Depends(auth.get_current_user)])
+async def update_elevator(
+    uuid: UUID,
+    data: schemas.ElevatorUpdate,
+    db=Depends(get_db)
+):
+    crud.update_elevator_data(db=db, uuid=uuid, data=data)
+    return Response(status_code=204)
+
+
 @router.get("/{uuid}/indicators/",
             response_model=List[schemas.ElevatorIndicatorData],
             summary="Read list of indicators for elevator by elevator's uuid",

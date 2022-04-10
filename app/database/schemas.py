@@ -54,15 +54,20 @@ class ElevatorBase(BaseModel):
     title: str
     model: str
     address: str
-    mac_address: str
 
 
 class ElevatorCreate(ElevatorBase):
+    mac_address: str
     owner_uuid: UUID = None
+
+
+class ElevatorUpdate(ElevatorBase):
+    owner_uuid: UUID
 
 
 class Elevator(ElevatorBase):
     uuid: UUID
+    mac_address: str
     owner: User = None
 
     class Config:

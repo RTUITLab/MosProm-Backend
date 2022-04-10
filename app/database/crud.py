@@ -33,8 +33,12 @@ def create_indicator(db: Session, new_indicator: schemas.IndicatorCreate):
     return
 
 
-def get_indicators(db: Session, uuid: UUID = None):
-    return db.query(models.Indicator).all()
+def get_indicators(db: Session, name: str = None):
+    query = db.query(models.Indicator)
+    if name:
+        query = query.filter_by(name=name).first()
+        return query
+    return query.all()
 
 
 def get_elevator_indicators(db: Session, uuid: UUID):
@@ -69,7 +73,16 @@ def create_elevator(db: Session, new_elevator: schemas.ElevatorCreate):
 
 def update_elevator_by_mac(db: Session, mac_address: str, user_uuid: UUID):
     _ = db.query(models.Elevator).\
-        filter_by(mac_address=mac_address).update({"owner_uuid": user_uuid})
+        filter(models.Elevator.mac_address == mac_address).update(
+            {"owner_uuid": user_uuid})
+    db.commit()
+    return
+
+
+def update_elevator_data(db: Session, uuid: UUID,
+                         data: schemas.ElevatorUpdate):
+    _ = db.query(models.Elevator).filter(models.Elevator.uuid == uuid).\
+        update(data.dict())
     db.commit()
     return
 
